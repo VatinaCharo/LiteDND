@@ -1,0 +1,210 @@
+# 剧本名
+name: 破屋解谜
+# 剧本节点
+quest_nodes:
+  - id: 1001
+    type: NORMAL
+    title: 黑暗
+    value: 0
+    # 子节点
+    childrens:
+      - 1002
+      - 1003
+      - 1004
+    events:
+    text: 你发现四周一片黑暗，需要找到一个可靠的光源才行
+  - id: 1002
+    type: NORMAL
+    title: 未点燃的油灯
+    value: 0
+    childrens:
+    # 触发函数
+    events:
+      - type: INTERACT
+        # 函数传入参数，int
+        source: 1005
+        effcts:
+            # 效果函数
+          - effect_type: REPLACE
+            # 效果对象，int
+            effect_target: 1002
+            # 效果值
+            effect_value: 1006
+    text: 你发现了一个未点燃的油灯，或许有什么东西可以点亮它
+  - id: 1003
+    type: NORMAL
+    title: 漆黑的墙壁
+    value: 0
+    childrens:
+    events:
+    text: 你摸索到一面墙壁，墙壁上似乎有什么东西，但是看不清楚
+  - id: 1004
+    type: NORMAL
+    title: 地板
+    value: 0
+    childrens:
+      - 1005
+    events:
+    text: 你脚下踩着地板，或许可以摸索一下有什么东西
+  - id: 1005
+    type: NORMAL
+    title: 火柴
+    value: 0
+    childrens:
+    events:
+      - type: INTERACT
+        source: 1002
+        effcts:
+          - effect_type: REPLACE
+            effect_target: 1002
+            effect_value: 1006
+    text: 你发现了一盒火柴，太好了这可以用来点燃物品
+  - id: 1006
+    type: NORMAL
+    title: 油灯
+    value: 0
+    childrens:
+    events:
+      - type: START
+        source:
+        effcts:
+          - effect_type: REPLACE
+            effect_target: 1001
+            effect_value: 1007
+    text: 太好了，你成功点亮了油灯，这下你可以看清周围的情况了
+  - id: 1007
+    type: NORMAL
+    title: 破屋
+    value: 0
+    childrens:
+      - 1012
+      - 1013
+    events:
+    text: 这是一间看上去破旧的屋子，真是无趣。不过你发现了一扇上锁的门，这应该就是逃离的关键了。旁边还有一个神秘的衣柜，要去探索一下吗？
+  - id: 1008
+    type: NORMAL
+    title: 墙
+    value: 0
+    childrens:
+      - 1009
+      - 1010
+      - 1011
+    events:
+    text: 你看着这面充满时光痕迹的墙，上面挂着奇怪的画作，嗯，都是你熟悉的画作。
+  - id: 1009
+    type: NORMAL
+    title: 画作
+    value: 0
+    childrens:
+    events:
+    text: 这是4年前著名的一副蓝色主题抽象画作，它生动的描绘了一个关于卡马奇蓝的故事
+  - id: 1010
+    type: NORMAL
+    title: 画作
+    value: 0
+    childrens:
+    events:
+    text: 这是9年前的著名画作，你喜欢它橙色的暖阳
+  - id: 1011
+    type: NORMAL
+    title: 画作
+    value: 0
+    childrens:
+    events:
+    text: 这幅冬日野景画不是你喜欢的类型，2年前由一个小画家创作，你讨厌它苍白而缺少层次的绘画手法
+  - id: 1012
+    type: NORMAL
+    title: 锁着的门
+    value: 0
+    childrens:
+    events:
+      - type: INTERACT
+        source: 1018
+        effcts:
+          - effect_type: REPLACE
+            effect_target: 1007
+            effect_value: 1019
+    text: 一扇锈迹斑斑的大门，可是被上锁了。为了避免破伤风，还是找到正确的途径打开它吧。
+  - id: 1013
+    type: NORMAL
+    title: 衣柜
+    value: 0
+    childrens:
+      - 1014
+    events:
+    text: 这是个奇怪的衣柜，但是你莫名觉得熟悉，要钻进去吗？你想起了一些关于衣柜的往事，它那么舒适，你越来越急切的想要和它融为一体。不过你回过神来，还是不了，先看看眼前的密码箱吧！
+  - id: 1014
+    type: NORMAL
+    title: 密码箱
+    value: 0
+    childrens:
+      - 1015
+      - 1016
+      - 1017
+    events:
+      - type: VALUE_GREATER_THAN
+        source: 2
+        effcts:
+          - effect_type: NODE_JION
+            effect_target: 1014
+            effect_value: 1018
+    text: 一个幼稚的密码箱，你小学时就能轻松破解它了
+  - id: 1015
+    type: PASSWORD
+    title: □
+    value: 0
+    childrens:
+    events:
+      - type: VALUE_EQUAL_TO
+        source: 4
+        effcts:
+          - effect_type: ADD
+            effect_target: 1014
+            effect_value: 1
+    text: 一个涂上了蓝色边框的密码孔
+  - id: 1016
+    type: PASSWORD
+    title: □
+    value: 0
+    childrens:
+    events:
+      - type: VALUE_EQUAL_TO
+        source: 9
+        effcts:
+          - effect_type: ADD
+            effect_target: 1014
+            effect_value: 1
+    text: 一个涂上了橙色边框的密码孔
+  - id: 1017
+    type: PASSWORD
+    title: □
+    value: 0
+    childrens:
+    events:
+      - type: VALUE_EQUAL_TO
+        source: 3
+        effcts:
+          - effect_type: ADD
+            effect_target: 1014
+            effect_value: 1
+    text: 一个涂上了白色边框的密码孔
+  - id: 1018
+    type: NORMAL
+    title: 钥匙
+    value: 0
+    childrens:
+    events:
+      - type: INTERACT
+        source: 1012
+        effcts:
+          - effect_type: REPLACE
+            effect_target: 1007
+            effect_value: 1019
+    text: 看，你拿到了一把钥匙，这肯定就是逃离这个破地方的关键
+  - id: 1019
+    type: NORMAL
+    title: 出口
+    value: 0
+    childrens:
+    events:
+    text: 你逃离了这间破屋子，真是令人庆幸，不过回想起来，似乎挺有趣的
