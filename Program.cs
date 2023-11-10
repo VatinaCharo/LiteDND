@@ -1,4 +1,5 @@
-﻿using LiteDND.Event;
+﻿using System.Text;
+using LiteDND.Event;
 using LiteDND.Type;
 
 namespace LiteDND
@@ -15,7 +16,8 @@ namespace LiteDND
         public Quest? Parent;
         public List<Quest> Children;
         public Dictionary<EventType, List<IEffect>> EffectDict;
-        public Quest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict)
+        public string Text;
+        public Quest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict, string Text)
         {
             this.ID = ID;
             this.Name = Name;
@@ -23,6 +25,7 @@ namespace LiteDND
             this.Parent = Parent;
             this.Children = Children;
             this.EffectDict = EffectDict;
+            this.Text = Text;
         }
         public Quest GetQuestRoot()
         {
@@ -38,6 +41,19 @@ namespace LiteDND
                 questList.AddRange(child.GetChildrenQuestList());
             };
             return questList;
+        }
+        public List<string> GetTreeString(int level=0){
+            var treeStringList = new List<string>();
+            var indent = new string(' ', level * 2) + "- ";
+            treeStringList.Add($"[{ID}]{indent}{Name}");
+            if (Children != null)
+            {
+                foreach (var child in Children)
+                {
+                    treeStringList.AddRange(child.GetTreeString(level + 1));
+                };
+            }
+            return treeStringList;
         }
         public void OnInteract(){
             EffectDict[EventType.INTERACT].ForEach(effect => effect.Apply());
@@ -60,11 +76,11 @@ namespace LiteDND
     }
     public class NormalQuest : Quest
     {
-        public NormalQuest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict) : base(ID, Name, Value, Parent, Children, EffectDict){}
+        public NormalQuest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict, string Text) : base(ID, Name, Value, Parent, Children, EffectDict, Text){}
     }
     public class PasswordQuest : Quest
     {
-        public PasswordQuest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict) : base(ID, Name, Value, Parent, Children, EffectDict){}
+        public PasswordQuest(int ID, string Name, int Value, Quest Parent, List<Quest> Children, Dictionary<EventType, List<IEffect>> EffectDict, string Text) : base(ID, Name, Value, Parent, Children, EffectDict, Text){}
         public void SetCode(int code)
         {
             if (code < 0 || code > 9) throw new ArgumentException("Wrong Password Code");
@@ -77,6 +93,8 @@ namespace LiteDND
         public static QuestScriptBean? ScriptBean { get; set; }
 
         public static Quest? QuestRoot { get; set; }
+
+        public static Quest? CurrentQuest { get; set; }
 
         public static Quest? GetQuestByID(int ID){
             if(QuestRoot == null) return null;
@@ -98,8 +116,9 @@ namespace LiteDND
         }
         public static void Interact(int sourceID, int targetID){}
         public static void Click(int targetID){}
-        public static string Show(string text){
-            // TODO 实现游戏文字界面的展示
+        public static string Show(){
+            var strBuilder = new StringBuilder();
+            // QQ手机端24个字符为一行
             // ===========================================
             // -> current_node
             // 
@@ -112,7 +131,20 @@ namespace LiteDND
             //   ||
             //   || quit   结束游戏
             // ===========================================
-            return "";
+            strBuilder.AppendLine("========================");
+            strBuilder.AppendLine($"-> {CurrentQuest?.Name}");
+            strBuilder.AppendLine("");
+            strBuilder.AppendLine($"   {CurrentQuest?.Text}");
+            strBuilder.AppendLine("========================");
+            if(QuestRoot !=null){
+            foreach(var str in QuestRoot.GetTreeString(0)){
+                strBuilder.AppendLine("   || " + str);
+            }
+            }
+            strBuilder.AppendLine("");
+            strBuilder.AppendLine("   || quit   结束游戏");
+            strBuilder.AppendLine("========================");
+            return strBuilder.ToString();
         }
     }
 }
