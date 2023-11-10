@@ -113,9 +113,11 @@ namespace LiteDND
         public static void Operation(string cmd){
             // xxx + yyy Interact
             // xxx Click
+            // quit 退出游戏
         }
         public static void Interact(int sourceID, int targetID){}
         public static void Click(int targetID){}
+        public static void Quit(){}
         public static string Show(){
             var strBuilder = new StringBuilder();
             // QQ手机端24个字符为一行
