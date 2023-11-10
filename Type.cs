@@ -17,7 +17,7 @@ namespace LiteDND.Type
     public enum EffectType
     {
         REPLACE,
-        NODE_JION,
+        NODE_JOIN,
         NODE_DROP,
         ADD,
         MINUS,
